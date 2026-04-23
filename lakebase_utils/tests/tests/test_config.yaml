@@ -1,0 +1,22 @@
+# ============================================================================
+# Local test configuration — Lakebase integration tests
+# ============================================================================
+# This file holds real workspace values for your local developer runs and is
+# git-ignored. The committed template is `tests/test_config.yaml.template`.
+#
+# Any env var (LAKEBASE_API_URL, LAKEBASE_API_TOKEN, DATABRICKS_CONFIG_PROFILE,
+# etc.) overrides these values at runtime — see the template for the full list.
+# ============================================================================
+
+lakebase:
+  # ts42-demo Lakebase project, primary endpoint on `production` branch.
+  api_url: "https://ep-crimson-leaf-e1dz6s0k.database.eastus2.azuredatabricks.net/api/2.0/workspace/984752964297111/rest/databricks_postgres"
+
+  probe_schema: "public"
+  probe_table: "databricks_list_roles"
+
+auth:
+  # Empty → SDK picks up DATABRICKS_CONFIG_PROFILE env var or the DEFAULT
+  # profile. Set to a named profile (e.g. "DEV") to pin the identity
+  # the tests authenticate as.
+  profile: "LAKEBASE_READER"

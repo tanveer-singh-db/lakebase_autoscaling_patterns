@@ -1,0 +1,45 @@
+# This is a Databricks asset bundle definition for lakebase_utils.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: lakebase_utils
+  uuid: 8584cfbc-4d30-421a-b5dc-e6ab26da560b
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+  - resources/*.yaml
+  - resources/*/*.yaml
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-984752964297111.11.azuredatabricks.net
+    variables:
+      catalog: ts42_test
+      schema: bronze
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-984752964297111.11.azuredatabricks.net
+      # We explicitly deploy to /Workspace/Users/78e7e02f-9ad0-4e1b-a648-e9154cf020a0 to make sure we only have a single copy.
+      root_path: /Workspace/Users/78e7e02f-9ad0-4e1b-a648-e9154cf020a0/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: ts42_test
+      schema: bronze
+    permissions:
+      - service_principal_name: 78e7e02f-9ad0-4e1b-a648-e9154cf020a0
+        level: CAN_MANAGE
