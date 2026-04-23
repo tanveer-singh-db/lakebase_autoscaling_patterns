@@ -1,0 +1,1 @@
+# lakebase_autoscaling_patterns
