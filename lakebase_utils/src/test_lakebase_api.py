@@ -12,14 +12,18 @@ Example:
     python src/test_lakebase_api.py
 """
 
-import requests
 
-from src.lakebase_utils.lakebase_api import LakebaseDataApiClient
+
+from lakebase_utils.lakebase_api import LakebaseDataApiClient
+
+rest_api_endpoint = "https://xxxx.azuredatabricks.net/api/2.0/workspace/xxxxxxx/rest/databricks_postgres"
+schema = "<your_schema>"
+table = "<your_table>"
 
 
 def main() -> None:
     with LakebaseDataApiClient(
-        base_url="https://ep-crimson-leaf-e1dz6s0k.database.eastus2.azuredatabricks.net/api/2.0/workspace/984752964297111/rest/databricks_postgres",
+        base_url=rest_api_endpoint,
         auth_mode = "user_oauth",
         profile="LAKEBASE_READER"
     ) as client:
@@ -27,14 +31,14 @@ def main() -> None:
 
         try:
             # # Single page
-            rows = client.get("manual_tests", "synced_cdf_source_table", params={"limit": 5})
+            rows = client.get(schema, table, params={"limit": 5})
             print(f"single-page fetch: {len(rows)} row(s)")
             for row in rows:
                 print(" ", row)
 
             # Paginated iteration (small page size to prove multi-page behavior)
             total = 0
-            for row in client.paginate("manual_tests", "synced_cdf_source_table", page_size=1, max_rows=1):
+            for row in client.paginate(schema, table, page_size=1, max_rows=1):
                 total += 1
                 print(f"paginate(page_size=2, max_rows=1): {total} row(s) yielded")
         except requests.HTTPError as e:
