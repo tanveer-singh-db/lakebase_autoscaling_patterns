@@ -25,7 +25,9 @@ def main() -> None:
     with LakebaseDataApiClient(
         base_url=rest_api_endpoint,
         auth_mode = "user_oauth",
-        profile="LAKEBASE_READER"
+        # profile="LAKEBASE_READER"
+        client_id="<your_client_id>",
+        client_secret="<your_client_secret>",
     ) as client:
         print(f"base={client.base_url}")
 
