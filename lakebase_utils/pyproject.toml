@@ -1,3 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lakebase_utils"
+version = "0.1.0"
+description = "Clients, provisioning, and patterns for Databricks Lakebase Autoscaling."
+requires-python = ">=3.11"
+dependencies = [
+    "databricks-sdk",
+    "psycopg2-binary",
+    "requests",
+    "aiohttp",
+    "PyYAML",
+    "jsonschema",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "aioresponses",
+]
+
+[project.scripts]
+lakebase-provision = "lakebase_utils.provisioning.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"lakebase_utils.provisioning" = ["schemas/*.json"]
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]

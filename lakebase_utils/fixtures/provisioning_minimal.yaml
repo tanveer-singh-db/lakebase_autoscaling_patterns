@@ -1,0 +1,6 @@
+target:
+  project: cust360
+  branch: production
+  endpoint: primary
+  database: databricks_postgres
+  host: ep-xxxx.database.eastus2.azuredatabricks.net

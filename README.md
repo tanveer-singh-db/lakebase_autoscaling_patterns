@@ -25,6 +25,11 @@ All three share one auth story (Databricks OAuth → Postgres role) and
 one provisioning story (`databricks_create_role` SQL), so you can swap
 surfaces without re-thinking permissions.
 
+There's also a config-driven CLI, **`lakebase-provision`**, that fills
+the data-layer gap Databricks Asset Bundles can't cover (Postgres roles,
+GRANTs, Data API exposed-schemas). See
+[`lakebase_provisioning.md`](lakebase_utils/docs/lakebase_provisioning.md).
+
 ## Documentation map
 
 Everything is under [`lakebase_utils/docs/`](lakebase_utils/docs/):
@@ -41,6 +46,9 @@ Everything is under [`lakebase_utils/docs/`](lakebase_utils/docs/):
   direct-Postgres client reference.
 - [`fix_data_api_auth.md`](lakebase_utils/docs/fix_data_api_auth.md) —
   diagnostic playbook for `PGRST301` / `42501` errors from the Data API.
+- [`lakebase_provisioning.md`](lakebase_utils/docs/lakebase_provisioning.md) —
+  the `lakebase-provision` CLI: YAML-driven roles/grants/exposed-schemas,
+  with a worked `databricks.yml` integration.
 
 ## The mental model in one paragraph
 

@@ -1,0 +1,33 @@
+target:
+  project: cust360
+  branch: production
+  endpoint: primary
+  database: databricks_postgres
+  host: ep-xxxx.database.eastus2.azuredatabricks.net
+  workspace_host: https://example.azuredatabricks.net
+  auth_mode: user_oauth
+  oauth_user: data-eng@example.com
+  profile: ${env:DATABRICKS_CONFIG_PROFILE:-DEFAULT}
+
+roles:
+  - identity: api-user@example.com
+    type: USER
+  - identity: 00000000-0000-0000-0000-000000000001
+    type: SERVICE_PRINCIPAL
+
+grants:
+  - to: api-user@example.com
+    usage_on_schemas: [public, analytics]
+    select_on_tables:
+      - public.widgets
+      - analytics.orders_synced
+    extra_privileges_on_tables: [INSERT]
+  - to: 00000000-0000-0000-0000-000000000001
+    usage_on_schemas: [public]
+    select_on_all_tables_in_schemas: [public]
+    revoke_existing: true
+
+exposed_schemas:
+  - public
+  - analytics
+refresh_schema_cache: true

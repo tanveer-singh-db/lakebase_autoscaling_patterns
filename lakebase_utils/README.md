@@ -12,8 +12,9 @@ you connect over the Data API (REST / PostgREST) or directly to Postgres
 | `src/lakebase_utils/lakebase_api.py`                  | `LakebaseDataApiClient`      | HTTPS (sync, `requests`) |
 | `src/lakebase_utils/lakebase_api_async.py`            | `AsyncLakebaseDataApiClient` | HTTPS (asyncio, `aiohttp`) — with token-bucket rate limiting |
 | `src/lakebase_utils/lakebase_connect.py`              | `LakebaseAutoscalingClient`  | Postgres wire (psycopg2 + pool) |
+| `src/lakebase_utils/provisioning/`                    | `lakebase-provision` CLI     | Config-driven roles/grants/exposed-schemas (data-layer gap-filler for Asset Bundles) |
 
-All three:
+All three clients:
 
 - Accept the **same auth modes** — `oauth_token`, `user_oauth`,
   `sp_oauth`, or SDK-ambient (auto).
@@ -34,14 +35,15 @@ All three:
 │   │   ├── _common.py               shared auth / URL resolution
 │   │   ├── lakebase_api.py          sync Data API client
 │   │   ├── lakebase_api_async.py    async Data API client (+ rate limiter)
-│   │   └── lakebase_connect.py      direct-Postgres client
+│   │   ├── lakebase_connect.py      direct-Postgres client
+│   │   └── provisioning/            YAML-driven roles/grants/exposed-schemas (CLI: lakebase-provision)
 │   ├── create_widgets.sql           sample table DDL + grants
 │   ├── provision_data_api_role.sql  provision user/SP as Postgres role
 │   ├── test_*.py                    runnable demo scripts (not pytest)
 │   └── test_user_authentication_flow.ipynb
 ├── tests/
-│   ├── unit/                        62 pytest tests, no network (~2s)
-│   └── integration/                 4 tests, gated on LAKEBASE_API_URL
+│   ├── unit/                        93 pytest tests, no network (~5s)
+│   └── integration/                 5 tests, gated on LAKEBASE_API_URL / _LIVE
 └── docs/                            ← see below
 ```
 
@@ -54,6 +56,7 @@ All three:
 | Use the REST client (sync or async)                          | [`docs/lakebase_api.md`](docs/lakebase_api.md)                           |
 | Use the direct-Postgres client                               | [`docs/lakebase_connect.md`](docs/lakebase_connect.md)                   |
 | Debug `PGRST301` / `42501` from the Data API                 | [`docs/fix_data_api_auth.md`](docs/fix_data_api_auth.md)                 |
+| Provision roles / grants / exposed-schemas from YAML         | [`docs/lakebase_provisioning.md`](docs/lakebase_provisioning.md)         |
 
 ## The two gotchas everyone hits
 
@@ -109,7 +112,7 @@ print(client.fetch("SELECT current_user, now()"))
 ## Tests
 
 ```bash
-# Unit tests — no network, 62 tests, ~2s
+# Unit tests — no network, ~5s
 .venv/bin/pytest tests/unit/ -v
 
 # Integration tests — needs LAKEBASE_API_URL + SDK auth

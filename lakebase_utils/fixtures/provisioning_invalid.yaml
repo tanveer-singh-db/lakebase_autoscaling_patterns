@@ -1,0 +1,8 @@
+target:
+  project: cust360
+  branch: production
+  # missing required: endpoint, database, host
+
+roles:
+  - identity: ""        # too short
+    type: ROOT          # not in enum
